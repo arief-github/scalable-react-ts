@@ -1,11 +1,19 @@
 import { fetchCat, fetchDog } from "@/api/animalApi";
 import { useState, useEffect } from "react";
 import { withAsync } from "@/helpers/withAsync";
-import { IDLE, PENDING, SUCCESS, ERROR, ApiStatus } from "@/constants/apiStatus";
+import { IDLE, PENDING, SUCCESS, ERROR } from "@/constants/apiStatus";
+import { useApiStatus } from "./useApiStatuses";
 
 const useFetchDog = () => {
 	const [dog, setDog] = useState<string>();
-	const [fetchDogStatus, setFetchDogStatus] = useState<ApiStatus>(IDLE);
+	const {
+		status: fetchDogStatus,
+		setStatus: setFetchDogStatus,
+		isIdle: isFetchDogStatusIdle,
+		isPending: isFetchDogStatusPending,
+		isError: isFetchDogStatusError,
+		isSuccess: isFetchDogStatusSuccess,
+	} = useApiStatus(IDLE);
 
 	const initFetchDog = async () => {
 		setFetchDogStatus(PENDING);
@@ -23,12 +31,24 @@ const useFetchDog = () => {
 		dog,
 		fetchDogStatus,
 		initFetchDog,
+		isFetchDogStatusError,
+		isFetchDogStatusPending,
+		isFetchDogStatusIdle,
+		isFetchDogStatusSuccess,
 	};
 };
 
 const useFetchCat = () => {
 	const [cat, setCat] = useState<string>();
-	const [fetchCatStatus, setFetchCatStatus] = useState<ApiStatus>(IDLE);
+
+	const {
+		status: fetchCatStatus,
+		setStatus: setFetchCatStatus,
+		isIdle: isFetchCatStatusIdle,
+		isError: isFetchCatStatusError,
+		isPending: isFetchCatStatusPending,
+		isSuccess: isFetchCatStatusSuccess,
+	} = useApiStatus(IDLE);
 
 	const initFetchCat = async () => {
 		setFetchCatStatus(PENDING);
@@ -45,12 +65,32 @@ const useFetchCat = () => {
 		cat,
 		initFetchCat,
 		fetchCatStatus,
+		isFetchCatStatusError,
+		isFetchCatStatusPending,
+		isFetchCatStatusIdle,
+		isFetchCatStatusSuccess,
 	};
 };
 
 const useFetchAnimals = () => {
-	const { dog, fetchDogStatus, initFetchDog } = useFetchDog();
-	const { cat, fetchCatStatus, initFetchCat } = useFetchCat();
+	const {
+		dog,
+		fetchDogStatus,
+		initFetchDog,
+		isFetchDogStatusIdle,
+		isFetchDogStatusError,
+		isFetchDogStatusPending,
+		isFetchDogStatusSuccess,
+	} = useFetchDog();
+	const {
+		cat,
+		fetchCatStatus,
+		initFetchCat,
+		isFetchCatStatusIdle,
+		isFetchCatStatusError,
+		isFetchCatStatusPending,
+		isFetchCatStatusSuccess,
+	} = useFetchCat();
 
 	const fetchAnimals = () => {
 		initFetchDog();
@@ -67,6 +107,14 @@ const useFetchAnimals = () => {
 		fetchAnimals,
 		fetchCatStatus,
 		fetchDogStatus,
+		isFetchDogStatusIdle,
+		isFetchDogStatusError,
+		isFetchDogStatusSuccess,
+		isFetchDogStatusPending,
+		isFetchCatStatusPending,
+		isFetchCatStatusIdle,
+		isFetchCatStatusError,
+		isFetchCatStatusSuccess,
 	};
 };
 

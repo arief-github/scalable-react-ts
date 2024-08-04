@@ -1,23 +1,22 @@
 import { fetchCat, fetchDog } from "@/api/animalApi";
 import { useState, useEffect } from "react";
 import { withAsync } from "@/helpers/withAsync";
-
-type ApiStatus = "IDLE" | "PENDING" | "SUCCESS" | "ERROR";
+import { IDLE, PENDING, SUCCESS, ERROR, ApiStatus } from "@/constants/apiStatus";
 
 const useFetchDog = () => {
 	const [dog, setDog] = useState<string>();
-	const [fetchDogStatus, setFetchDogStatus] = useState<ApiStatus>("IDLE");
+	const [fetchDogStatus, setFetchDogStatus] = useState<ApiStatus>(IDLE);
 
 	const initFetchDog = async () => {
-		setFetchDogStatus("PENDING");
+		setFetchDogStatus(PENDING);
 
 		const { response, error } = await withAsync(() => fetchDog());
 
 		if (error) {
-			setFetchDogStatus("ERROR");
+			setFetchDogStatus(ERROR);
 		} else if (response) {
 			setDog(response.data.message);
-			setFetchDogStatus("SUCCESS");
+			setFetchDogStatus(SUCCESS);
 		}
 	};
 	return {
@@ -29,16 +28,16 @@ const useFetchDog = () => {
 
 const useFetchCat = () => {
 	const [cat, setCat] = useState<string>();
-	const [fetchCatStatus, setFetchCatStatus] = useState<ApiStatus>("IDLE");
+	const [fetchCatStatus, setFetchCatStatus] = useState<ApiStatus>(IDLE);
 
 	const initFetchCat = async () => {
-		setFetchCatStatus("PENDING");
+		setFetchCatStatus(PENDING);
 		const { response, error } = await withAsync(() => fetchCat());
 		if (error) {
-			setFetchCatStatus("ERROR");
+			setFetchCatStatus(ERROR);
 		} else if (response) {
 			setCat(response.data[0].url);
-			setFetchCatStatus("SUCCESS");
+			setFetchCatStatus(SUCCESS);
 		}
 	};
 
